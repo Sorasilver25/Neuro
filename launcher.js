@@ -3,7 +3,7 @@ let sessionCode;
 let userRole = '';
 
 // const socketUrl = "ws://localhost:3000";  // En développement local
-const socketUrl = "ws://https://neuro-plum.vercel.app/";  // Sur Render/Vercel
+const socketUrl = "wss://https://neuro-c3fo.onrender.com";  // Sur Render/Vercel
 
 
 function startHost() {
