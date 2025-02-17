@@ -3,8 +3,7 @@ let sessionCode;
 let userRole = '';
 
 // const socketUrl = "ws://localhost:3000";  // En développement local
-const socketUrl = "wss://https://neuro-c3fo.onrender.com";  // Sur Render/Vercel
-
+const socketUrl = "wss://neuro-c3fo.onrender.com";  // Sur Render/Vercel
 
 function startHost() {
     socket = new WebSocket(socketUrl);
@@ -27,8 +26,9 @@ function startHost() {
         } else if (data.type === 'guestJoined') {
             addMessage("Un invité a rejoint la session", 'host');
         } else if (data.type === 'message') {
-            if(data.role != undefined)
+            if (data.role !== undefined) {
                 addMessage(data.text, data.role);
+            }
         }
     };
 }
@@ -59,12 +59,12 @@ function joinSession() {
             // Informer l'hôte que l'invité a rejoint
             socket.send(JSON.stringify({ type: 'guestJoined', sessionCode: sessionCode }));
         } else if (data.type === 'message') {
-            if(data.role != undefined)
+            if (data.role !== undefined) {
                 addMessage(data.text, data.role);  // Réception du message
+            }
         }
     };
 }
-
 
 // Fonction pour envoyer un message dans le chat
 function sendMessage() {
