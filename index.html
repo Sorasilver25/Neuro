@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clash of Moves - WebSocket Test</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="landing-page">
+        <h2>Clash of Moves - Multi Test</h2>
+        <p>Choisissez votre rôle pour commencer :</p>
+        <button onclick="startHost()">Devenir Hôte</button>
+        <button onclick="joinSession()">Rejoindre en tant qu'Invité</button>
+        <p id="session-code"></p>
+    </div>
+
+    <div id="chat-container" style="display:none;">
+        <div id="chat"></div>
+        <input type="text" id="message" placeholder="Écrire un message" style="display:none;">
+        <button onclick="sendMessage()">Envoyer</button>
+    </div>
+
+    <script src="launcher.js"></script>
+</body>
+</html>

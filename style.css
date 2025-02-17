@@ -1,0 +1,110 @@
+/* Style général de la page */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f4f8;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+/* Page de démarrage (landing page) */
+#landing-page {
+    text-align: center;
+}
+
+#landing-page h2 {
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+#landing-page p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    margin: 10px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Page de chat (chat page) */
+#chat-page {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+#chat {
+    width: 100%;
+    height: 400px;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    background-color: #fff;
+    padding: 15px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#message {
+    width: 70%;
+    padding: 12px;
+    margin: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+#message:focus {
+    border-color: #007bff;
+}
+
+button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+/* Style des messages */
+.host, .guest {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    padding: 5px;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.host {
+    background-color: #ffe6e6;
+    color: #d9534f;
+    text-align: left;
+}
+
+.guest {
+    background-color: #e6f7ff;
+    color: #5bc0de;
+    text-align: left;
+}
+
+/* Animation pour le changement de page */
+.hidden {
+    display: none;
+}
