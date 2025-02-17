@@ -2,8 +2,8 @@ let socket;
 let sessionCode;
 let userRole = '';
 
-const socketUrl = "ws://localhost:3000";  // En développement local
-// const socketUrl = "ws://ton-serveur-websocket-url";  // Sur Render/Vercel
+// const socketUrl = "ws://localhost:3000";  // En développement local
+const socketUrl = "wss://https://neuro-c3fo.onrender.com";  // Sur Render/Vercel
 
 
 function startHost() {
