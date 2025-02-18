@@ -18,7 +18,8 @@ wss.on('connection', (ws) => {
     console.log('Un client est connecté');
 
     let userRole = '';
-    let currentSessionCode = '';
+    // let currentSessionCode = '';
+    let username = '';
 
     ws.isAlive = true;
     ws.on('pong', () => {
@@ -30,29 +31,44 @@ wss.on('connection', (ws) => {
 
         if (parsedMessage.type === 'createSession') {
             const sessionCode = generateRandomCode();
-            sessions[sessionCode] = { host: ws, guest: null };
+            sessions[sessionCode] = { host: ws, guest: null, hostUsername: parsedMessage.username };
             userRole = 'host';
+            username = parsedMessage.username;
             currentSessionCode = sessionCode;
             ws.send(JSON.stringify({ type: 'sessionCreated', code: sessionCode }));
         } else if (parsedMessage.type === 'joinSession') {
-            const { sessionCode } = parsedMessage;
+            const { sessionCode, username } = parsedMessage;
             if (sessions[sessionCode] && !sessions[sessionCode].guest) {
                 sessions[sessionCode].guest = ws;
+                sessions[sessionCode].guestUsername = username;
                 userRole = 'guest';
                 currentSessionCode = sessionCode;
-                sessions[sessionCode].host.send(JSON.stringify({ type: 'guestJoined' }));
+                sessions[sessionCode].host.send(JSON.stringify({ type: 'guestJoined', username }));
                 ws.send(JSON.stringify({ type: 'joinedSession', code: sessionCode }));
             } else {
                 ws.send(JSON.stringify({ type: 'sessionInvalid' }));
             }
         } else if (parsedMessage.type === 'sendMessage') {
-            const { sessionCode, text } = parsedMessage;
+            const { sessionCode, text, role, username } = parsedMessage;
             if (sessions[sessionCode]) {
-                const roleMessage = { type: 'message', text, role: userRole };
-                if (userRole === 'host') {
+                let senderUsername = username;
+
+                if (role === 'guest') {
+                    senderUsername = sessions[sessionCode].guestUsername || username;
+                } else if (role === 'host') {
+                    senderUsername = sessions[sessionCode].hostUsername || username;
+                }
+                const roleMessage = { 
+                    type: 'message', 
+                    text, 
+                    role, 
+                    username: senderUsername
+                };
+                
+                if (role === 'host') {
                     sessions[sessionCode].guest?.send(JSON.stringify(roleMessage));
-                } else if (userRole === 'guest') {
-                    sessions[sessionCode].host.send(JSON.stringify(roleMessage));
+                } else if (role === 'guest') {
+                    sessions[sessionCode].host?.send(JSON.stringify(roleMessage));
                 }
             }
         }

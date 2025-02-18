@@ -1,37 +1,45 @@
 let socket;
 let sessionCode;
 let userRole = '';
+let hostUsername = '';
+let guestUsername = '';
+
 
 // const socketUrl = "http://localhost:3000";  // En développement local
 const socketUrl = "wss://neuro-c3fo.onrender.com";  // Sur Render
 
 
 function startHost() {
+    hostUsername = prompt("Entrez votre nom d'utilisateur (Hôte)");
+    if (!hostUsername) {
+        hostUsername = "Hôte";
+    }
+
     socket = new WebSocket(socketUrl);
 
     socket.onopen = () => {
-        socket.send(JSON.stringify({ type: 'createSession' }));
+        socket.send(JSON.stringify({ type: 'createSession', username: hostUsername}));
         userRole = 'host';
-        addMessage("La session a bien été créée, en attente d'un invité.", 'host');
+        addMessage("La session a bien été créée, en attente d'un invité.", 'system');
     };
 
     socket.onmessage = (event) => { // côté hôte
         const data = JSON.parse(event.data);
         if (data.type === 'sessionCreated') {
             sessionCode = data.code;
-            addMessage("La session a été créée avec le code : " + sessionCode, 'host');
+            addMessage("La session a été créé avec le code : <br><strong>" + sessionCode +"</strong> <span class='si--copy-line'></span>", 'system');
             
             displayChatBox();
         } else if (data.type === 'guestJoined') {
-            addMessage("Un invité a rejoint la session", 'host');
+            addMessage(`${data.username} a rejoint la session`, 'system');
         } else if (data.type === 'message') {
             if (data.role !== undefined) {
-                addMessage(data.text, data.role);
+                addMessage(data.text, data.role, data.username);
             }
         }
         else  if (data.type === 'sessionClosed') {
             socket.close();
-            addMessage("l'invité à quitter la session.", 'guest');
+            addMessage(`${data.username} à quitter la session.`, 'system');
             displayLauncher();
         }
     };
@@ -43,29 +51,34 @@ function startHost() {
 }
 
 function joinSession() {
+    guestUsername = prompt("Entrez votre nom d'utilisateur (Invité)");
+    if (!guestUsername) {
+        guestUsername = "Invité";
+    }
+
     const enteredCode = prompt("Entrez le code de la session de l'hôte");
     socket = new WebSocket(socketUrl);
 
     socket.onopen = () => {
-        socket.send(JSON.stringify({ type: 'joinSession', sessionCode: enteredCode }));
+        socket.send(JSON.stringify({ type: 'joinSession', username: guestUsername, sessionCode: enteredCode }));
         userRole = 'guest';
     };
 
     socket.onmessage = (event) => {  // côté invité
         const data = JSON.parse(event.data);
-
+        
         if (data.type === 'sessionInvalid') {
             alert("Code de session invalide.");
         } else if (data.type === 'joinedSession') {
             sessionCode = data.code;
-            addMessage("Vous avez rejoint la session avec succès!", 'guest');
+            addMessage("Vous avez rejoint la session avec succès!", 'system');
             displayChatBox()
             $('#session-code').innerHTML = `Vous êtes dans la session avec le code : <strong>${sessionCode}</strong>`;
             
             socket.send(JSON.stringify({ type: 'guestJoined', sessionCode: sessionCode }));
         } else if (data.type === 'message') {
             if (data.role !== undefined) {
-                addMessage(data.text, data.role);
+                addMessage(data.text, data.role, data.username);
             }
         }
         else  if (data.type === 'sessionClosed') {
@@ -88,21 +101,34 @@ function sendMessage() {
             type: 'sendMessage',
             sessionCode,
             text: msg,
-            role: userRole
+            role: userRole,
+            username: userRole === 'host' ? hostUsername : guestUsername
         }));
-        addMessage(msg, userRole);
+        addMessage(msg, userRole, userRole === 'host' ? hostUsername : guestUsername);
+        $('#message').val('')
     }
 }
 
-function addMessage(text, role) {
+function addMessage(text, role, username) {
     if (text !== undefined) {
         const chat = $("#chat");
-        const messageElement = $("<p>")
-            .text(`${role === 'host' ? 'Host' : 'Guest'}: ${text}`)
+        let messageElement = $("<p>")
+            .text(`${username} : ${text}`)
             .addClass(role);
+        if(role == 'host'){
+            messageElement = `<p class="${role}">
+                                <span class="foundation--crown"></span>
+                                ${username} : ${text}
+                              </p>`;
+        }
+        else if (role == 'system'){
+            messageElement = `<p class="${role}">
+                                <span class="tdesign--system-messages-filled"></span>
+                                Système : ${text}
+                              </p>`;
+        }
         chat.append(messageElement);
         chat.scrollTop(chat[0].scrollHeight);
-        $('#message').val('')
     }
 }
 
@@ -118,9 +144,9 @@ function displayLauncher() {
     displayAlert()
     setTimeout(() => {
         $('#landing-page').removeClass('cache');
-        $('#chat-container').addClass('cache');       
+        $('.main-container').addClass('cache')
+        $('#chat-container').addClass('cache');
     }, 3000);
-
 }
 
 function displayAlert(){
@@ -137,3 +163,16 @@ function displayAlert(){
         });
     });
 }
+
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+        if($("#message").val().lenght != ""){
+            sendMessage();
+        }
+    }
+});
+
+$(document).on('click', '.si--copy-line', function () {
+    const textToCopy = $(this).siblings('strong').text();
+    navigator.clipboard.writeText(textToCopy)
+});
