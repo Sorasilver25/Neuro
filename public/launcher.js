@@ -3,7 +3,8 @@ let sessionCode;
 let userRole = '';
 
 // const socketUrl = "http://localhost:3000";  // En développement local
-const socketUrl = "wss://neuro-c3fo.onrender.com";  // Sur Render/Vercel
+const socketUrl = "wss://neuro-c3fo.onrender.com";  // Sur Render
+
 
 function startHost() {
     socket = new WebSocket(socketUrl);
@@ -20,9 +21,6 @@ function startHost() {
             sessionCode = data.code;
             addMessage("La session a été créée avec le code : " + sessionCode, 'host');
             
-            // Afficher le code à rejoindre dans l'interface
-            const joinMessage = `Code de session à rejoindre : <strong>${sessionCode}</strong>`;
-            document.getElementById('session-code').innerHTML = joinMessage;
             displayChatBox();
         } else if (data.type === 'guestJoined') {
             addMessage("Un invité a rejoint la session", 'host');
@@ -31,7 +29,17 @@ function startHost() {
                 addMessage(data.text, data.role);
             }
         }
+        else  if (data.type === 'sessionClosed') {
+            socket.close();
+            addMessage("l'invité à quitter la session.", 'guest');
+            displayLauncher();
+        }
     };
+
+    window.addEventListener("beforeunload", () => {
+        socket.send(JSON.stringify({ type: "disconnect" }));
+        socket.close();
+    });
 }
 
 function joinSession() {
@@ -54,17 +62,25 @@ function joinSession() {
             displayChatBox()
             $('#session-code').innerHTML = `Vous êtes dans la session avec le code : <strong>${sessionCode}</strong>`;
             
-            // Informer l'hôte que l'invité a rejoint
             socket.send(JSON.stringify({ type: 'guestJoined', sessionCode: sessionCode }));
         } else if (data.type === 'message') {
             if (data.role !== undefined) {
-                addMessage(data.text, data.role);  // Réception du message
+                addMessage(data.text, data.role);
             }
         }
+        else  if (data.type === 'sessionClosed') {
+            socket.close();
+            addMessage("l'hôte à quitter la session.", 'host');
+            displayLauncher();
+        }
     };
+
+    window.addEventListener("beforeunload", () => {
+        socket.send(JSON.stringify({ type: "disconnect" }))
+        socket.close();
+    });
 }
 
-// Fonction pour envoyer un message dans le chat
 function sendMessage() {
     const msg = $("#message").val();
     if (socket && msg && sessionCode) {
@@ -74,25 +90,50 @@ function sendMessage() {
             text: msg,
             role: userRole
         }));
-        addMessage(msg, userRole);  // Affiche immédiatement le message localement
+        addMessage(msg, userRole);
     }
 }
 
-// Fonction pour afficher les messages dans le chat
 function addMessage(text, role) {
     if (text !== undefined) {
-        const chat = document.getElementById("chat");
-        const messageElement = document.createElement("p");
-        messageElement.textContent = `${role === 'host' ? 'Host' : 'Guest'}: ${text}`;
-        messageElement.classList.add(role);
-        chat.appendChild(messageElement);
-        chat.scrollTop = chat.scrollHeight;
+        const chat = $("#chat");
+        const messageElement = $("<p>")
+            .text(`${role === 'host' ? 'Host' : 'Guest'}: ${text}`)
+            .addClass(role);
+        chat.append(messageElement);
+        chat.scrollTop(chat[0].scrollHeight);
+        $('#message').val('')
     }
 }
+
 
 function displayChatBox() {
     $('#landing-page').addClass('cache');
-    $('#chat-container').css('display','block');
-    $('#chat').css('display','block');
-    $('#message').css('display','block');
+    $('h1').addClass('cache');
+    $('.main-container').removeClass('cache')
+    $('#chat-container').removeClass('cache');
+}
+
+function displayLauncher() {
+    displayAlert()
+    setTimeout(() => {
+        $('#landing-page').removeClass('cache');
+        $('#chat-container').addClass('cache');       
+    }, 3000);
+
+}
+
+function displayAlert(){
+    $("body").prepend(`
+        <div id="popupAlert" class="popup-alert">
+            <span id="popupMessage">L'autre joueur a quitté la session !</span>
+            <button id="closePopup">&times;</button>
+        </div>
+    `);
+
+    $("#closePopup").click(function () {
+        $("#popupAlert").fadeOut(300, function () {
+            $(this).remove();
+        });
+    });
 }

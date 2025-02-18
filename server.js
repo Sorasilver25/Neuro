@@ -8,35 +8,37 @@ const wss = new WebSocket.Server({ server });
 
 let sessions = {};
 
-// Middleware pour servir les fichiers statiques (ex. index.html, CSS, JS)
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Route pour servir index.html
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html')); // Spécifie le chemin de ton index.html
+    res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// WebSocket pour gérer les sessions en temps réel
 wss.on('connection', (ws) => {
     console.log('Un client est connecté');
-    
-    let userRole = '';  
+
+    let userRole = '';
     let currentSessionCode = '';
+
+    ws.isAlive = true;
+    ws.on('pong', () => {
+        ws.isAlive = true;
+    });
 
     ws.on('message', (message) => {
         const parsedMessage = JSON.parse(message);
 
         if (parsedMessage.type === 'createSession') {
             const sessionCode = generateRandomCode();
-            sessions[sessionCode] = { host: ws, guest: null };  // Stocke l'hôte
-            userRole = 'host';  // L'utilisateur est l'hôte
+            sessions[sessionCode] = { host: ws, guest: null };
+            userRole = 'host';
             currentSessionCode = sessionCode;
             ws.send(JSON.stringify({ type: 'sessionCreated', code: sessionCode }));
         } else if (parsedMessage.type === 'joinSession') {
             const { sessionCode } = parsedMessage;
             if (sessions[sessionCode] && !sessions[sessionCode].guest) {
                 sessions[sessionCode].guest = ws;
-                userRole = 'guest';  // L'utilisateur est l'invité
+                userRole = 'guest';
                 currentSessionCode = sessionCode;
                 sessions[sessionCode].host.send(JSON.stringify({ type: 'guestJoined' }));
                 ws.send(JSON.stringify({ type: 'joinedSession', code: sessionCode }));
@@ -46,9 +48,9 @@ wss.on('connection', (ws) => {
         } else if (parsedMessage.type === 'sendMessage') {
             const { sessionCode, text } = parsedMessage;
             if (sessions[sessionCode]) {
-                const roleMessage = { type: 'message', text, role: userRole };  // Inclure le rôle dans le message
+                const roleMessage = { type: 'message', text, role: userRole };
                 if (userRole === 'host') {
-                    sessions[sessionCode].guest && sessions[sessionCode].guest.send(JSON.stringify(roleMessage));
+                    sessions[sessionCode].guest?.send(JSON.stringify(roleMessage));
                 } else if (userRole === 'guest') {
                     sessions[sessionCode].host.send(JSON.stringify(roleMessage));
                 }
@@ -58,21 +60,38 @@ wss.on('connection', (ws) => {
 
     ws.on('close', () => {
         console.log('Client déconnecté');
-        for (const sessionCode in sessions) {
-            if (sessions[sessionCode].host === ws || sessions[sessionCode].guest === ws) {
-                delete sessions[sessionCode];
-                break;
-            }
-        }
+        closeSession(ws);
     });
 });
 
-// Génération de code aléatoire pour la session
+function closeSession(ws) {
+    for (const sessionCode in sessions) {
+        const session = sessions[sessionCode];
+
+        if (session.host === ws) {
+            session.guest?.send(JSON.stringify({ type: 'sessionClosed' }));
+            delete sessions[sessionCode];
+            break;
+        } else if (session.guest === ws) {
+            session.host?.send(JSON.stringify({ type: 'sessionClosed' }));
+            delete sessions[sessionCode];
+            break;
+        }
+    }
+}
+
+setInterval(() => {
+    wss.clients.forEach((ws) => {
+        if (!ws.isAlive) return ws.terminate();
+        ws.isAlive = false;
+        ws.ping();
+    });
+}, 5000);
+
 function generateRandomCode() {
     return Math.random().toString(36).substr(2, 8);
 }
 
-// Démarrer le serveur HTTP avec WebSocket
 const port = process.env.PORT || 3000;
 server.listen(port, () => {
     console.log(`Serveur démarré sur http://localhost:${port}`);

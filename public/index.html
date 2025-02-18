@@ -8,20 +8,35 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 </head>
 <body>
+    <h1>Clash of Moves - WebSocket Test</h1>
     <div id="landing-page">
         <!-- <h2>Clash of Moves - Multi Test</h2> -->
         <p>Choisissez votre rôle pour commencer :</p>
         <button onclick="startHost()">Devenir Hôte</button>
         <button onclick="joinSession()">Rejoindre en tant qu'Invité</button>
-        <p id="session-code"></p>
     </div>
-
-    <div id="chat-container" style="display:none;">
-        <div id="chat"></div>
-        <input type="text" id="message" placeholder="Écrire un message" style="display:none;">
-        <button onclick="sendMessage()">Envoyer</button>
+    <p id="session-code"></p>
+    <div class="main-container cache">
+        <div id="chat-container" class="cache">
+            <div id="chat"></div>
+            <input type="text" id="message" placeholder="Écrire un message">
+            <button class="sendMessage" onclick="sendMessage()">Envoyer</button>
+        </div>
+    <div class="game-container">
+        <div class="handTopPlayer-container">
+        </div>
+        <div class="grid-container">
+        </div>
+        <div class="handBottomPlayer-container">
+        </div>
     </div>
+    <div class="assetGame-container">
+        <div class="AlertTurn"></div>
+        <div class="ObjectifAnnoucement"></div>
+        <div class="HelpNotice"></div>
 
+    </div>
+    </div>
     <script src="launcher.js"></script>
 </body>
 </html>
