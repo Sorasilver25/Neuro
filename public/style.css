@@ -63,7 +63,6 @@ button:hover {
     color: white;
 }
 
-/* Page de chat (chat page) */
 #chat-page {
     width: 100%;
     max-width: 800px;
@@ -125,9 +124,14 @@ button:hover {
 
 #chat p {
     border: 1px solid;
+    display: inline-table;
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    max-width: 100%;
 }
 
-#message {
+#message, #username {
     border-radius: 5px;
     border: 1px solid #ccc;
     font-size: 1rem;
@@ -137,7 +141,7 @@ button:hover {
     padding: 6px;
 }
 
-#message:focus {
+#message:focus, #username:focus {
     border-color: #007bff;
 }
 
@@ -147,7 +151,7 @@ button:disabled {
 }
 
 /* Style des messages */
-.host, .guest {
+.host, .guest, .system {
     font-size: 1.1rem;
     margin-bottom: 10px;
     padding: 5px;
@@ -156,15 +160,22 @@ button:disabled {
 }
 
 .host {
-    background-color: #ffe6e6;
-    color: #d9534f;
+    background-color: #e6e6e6;
+    color: black;
     text-align: left;
+    display: flex;
 }
 
 .guest {
-    background-color: #e6f7ff;
-    color: #5bc0de;
+    background-color: #e6e6e6;
+    color: black;
     text-align: left;
+}
+
+.system {
+    /* color: #4fd95e; */
+    color: #00a652;
+    background: #00a6520d;
 }
 
 .hidden {
@@ -245,4 +256,75 @@ button:disabled {
     width: 100%;
     height: 60%;
     background: aqua;
+}
+
+.tdesign--help-circle-filled {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='M12 23c6.075 0 11-4.925 11-11S18.075 1 12 1S1 5.925 1 12s4.925 11 11 11m-.174-11.11c.432-.53.974-.974 1.41-1.318a2 2 0 1 0-3.123-2.24l-.332.944l-1.886-.666l.333-.943a4.001 4.001 0 1 1 6.246 4.476c-.431.34-.817.666-1.096 1.009c-.274.338-.378.61-.378.848v1.25h-2V14c0-.867.39-1.573.826-2.11M11 18.254V16.25h2.004v2.004z'/%3E%3C/svg%3E");
+    background-color: #bebab8;
+    -webkit-mask-image: var(--svg);
+    mask-image: var(--svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    cursor: pointer;
+}
+
+.tdesign--help-circle-filled:hover {
+    background-color: #706b69;
+}
+
+.foundation--crown {
+    display: inline list-item;
+    color: transparent;
+    width: 20px;
+    height: 20px;
+    --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='%23000' fill-rule='evenodd' clip-rule='evenodd'%3E%3Cpath d='M84.01 79.998a3.044 3.044 0 0 0-3.042-3.043H19.033a3.044 3.044 0 0 0-3.042 3.043v3.871a3.04 3.04 0 0 0 3.042 3.042h61.935a3.04 3.04 0 0 0 3.042-3.042zM24.619 38.433l-.017-.017l-.002.002a3.24 3.24 0 0 0-2.118-.798a3.264 3.264 0 0 0-3.26 3.193h-.08v29.238h.103c.155 1.659 1.536 2.965 3.237 2.965l.036-.004v.004h54.963v-.076l.037.004c1.675 0 3.041-1.268 3.229-2.893h.037V41.42a3.267 3.267 0 0 0-3.194-3.945c-.776 0-1.479.282-2.04.733l-.009-.009l-.091.091a3 3 0 0 0-.312.312l-6.881 6.881l-15.852-15.852l-.031.031a3.25 3.25 0 0 0-2.373-1.033a3.25 3.25 0 0 0-2.377 1.037l-.035-.035l-15.887 15.885l-6.766-6.767a4 4 0 0 0-.317-.316m48.354 8.394v.095h-.095z'/%3E%3Ccircle cx='22.348' cy='27.13' r='6.042'/%3E%3Ccircle cx='77.348' cy='27.13' r='6.042'/%3E%3Ccircle cx='50.348' cy='19.13' r='6.042'/%3E%3C/g%3E%3C/svg%3E");
+    background-color: goldenrod;
+    -webkit-mask-image: var(--svg);
+    mask-image: var(--svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+}
+
+.tdesign--system-messages-filled {
+    display: inline list-item;
+    width: 24px;
+    height: 24px;
+    background-color: #00a652;
+    --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11s11-4.925 11-11S18.075 1 12 1M9.503 14.5H6.5v-5h3.003l5.997-4v13z'/%3E%3C/svg%3E");
+    background-color: currentColor;
+    -webkit-mask-image: var(--svg);
+    mask-image: var(--svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+}
+
+.si--copy-line {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    top: 3px;
+    position: relative;
+    cursor: pointer;
+    --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='%23000' stroke-linecap='round' stroke-linejoin='round' stroke-miterlimit='10' stroke-width='1.5' d='M6 15h-.6C4.07 15 3 13.93 3 12.6V5.4C3 4.07 4.07 3 5.4 3h7.2C13.93 3 15 4.07 15 5.4V6m-3.6 3h7.2a2.4 2.4 0 0 1 2.4 2.4v7.2a2.4 2.4 0 0 1-2.4 2.4h-7.2A2.4 2.4 0 0 1 9 18.6v-7.2A2.4 2.4 0 0 1 11.4 9'/%3E%3C/svg%3E");
+    background-color: currentColor;
+    -webkit-mask-image: var(--svg);
+    mask-image: var(--svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+}
+
+.si--copy-line:hover {
+    background: #006833;
+    scale: 1.1;
 }
