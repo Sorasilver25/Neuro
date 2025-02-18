@@ -22,6 +22,10 @@ body {
     margin-bottom: 20px;
 }
 
+.cache {
+    display: none;
+}
+
 #landing-page p {
     font-size: 1.2rem;
     margin-bottom: 30px;
