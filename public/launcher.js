@@ -2,7 +2,7 @@ let socket;
 let sessionCode;
 let userRole = '';
 
-// const socketUrl = "ws://localhost:3000";  // En développement local
+// const socketUrl = "http://localhost:3000";  // En développement local
 const socketUrl = "wss://neuro-c3fo.onrender.com";  // Sur Render/Vercel
 
 function startHost() {
@@ -23,6 +23,7 @@ function startHost() {
             // Afficher le code à rejoindre dans l'interface
             const joinMessage = `Code de session à rejoindre : <strong>${sessionCode}</strong>`;
             document.getElementById('session-code').innerHTML = joinMessage;
+            displayChatBox();
         } else if (data.type === 'guestJoined') {
             addMessage("Un invité a rejoint la session", 'host');
         } else if (data.type === 'message') {
@@ -50,11 +51,8 @@ function joinSession() {
         } else if (data.type === 'joinedSession') {
             sessionCode = data.code;
             addMessage("Vous avez rejoint la session avec succès!", 'guest');
-
-            // Affichage de la console de chat et mise à jour de l'interface
-            document.getElementById('chat').style.display = 'block';  // Affiche le chat
-            document.getElementById('message').style.display = 'block'; // Affiche le champ de message
-            document.getElementById('session-code').innerHTML = `Vous êtes dans la session avec le code : <strong>${sessionCode}</strong>`;
+            displayChatBox()
+            $('#session-code').innerHTML = `Vous êtes dans la session avec le code : <strong>${sessionCode}</strong>`;
             
             // Informer l'hôte que l'invité a rejoint
             socket.send(JSON.stringify({ type: 'guestJoined', sessionCode: sessionCode }));
@@ -68,7 +66,7 @@ function joinSession() {
 
 // Fonction pour envoyer un message dans le chat
 function sendMessage() {
-    const msg = document.getElementById("message").value;
+    const msg = $("#message").val();
     if (socket && msg && sessionCode) {
         socket.send(JSON.stringify({
             type: 'sendMessage',
@@ -90,4 +88,11 @@ function addMessage(text, role) {
         chat.appendChild(messageElement);
         chat.scrollTop = chat.scrollHeight;
     }
+}
+
+function displayChatBox() {
+    $('#landing-page').addClass('cache');
+    $('#chat-container').css('display','block');
+    $('#chat').css('display','block');
+    $('#message').css('display','block');
 }
