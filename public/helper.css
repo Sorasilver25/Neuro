@@ -1,0 +1,28 @@
+.container {
+    position: absolute;
+    z-index: 999;
+    background: #fff;
+    padding: 5%;
+    overflow: scroll;
+    height: 100%;
+}
+
+.container {
+    max-width: 800px;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+h1, h2 {
+    color: #333;
+}
+ul {
+    padding-left: 20px;
+}
+.footer {
+    margin-top: 20px;
+    font-style: italic;
+    text-align: center;
+}
