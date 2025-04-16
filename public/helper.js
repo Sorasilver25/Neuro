@@ -1,0 +1,82 @@
+function showNotice(){
+   $('body').append(`
+         <div class="container">
+         <h1>Notice du Jeu : Clash of Moves</h1>
+         
+         <h2>1. Présentation du Jeu</h2>
+         <p><strong>Clash of Moves</strong> est un jeu stratégique au tour par tour pour <strong>2 joueurs</strong>. Chaque joueur contrôle <strong>8 pions</strong> sur un plateau de <strong>9x9 cases</strong> et utilise des <strong>cartes d’action</strong> pour influencer le déroulement de la partie. Chaque joueur possède <strong>7 pions classiques</strong> et <strong>1 pion spécial</strong>.</p>
+         
+         <h2>2. Objectif du Jeu</h2>
+         <ul>
+               <li>Capturer tous les pions adverses.</li>
+               <li>Atteindre la case centrale avec un de ses pions.</li>
+               <li>Capturer le pion spécial adverse.</li>
+         </ul>
+         
+         <h2>3. Matériel</h2>
+         <ul>
+               <li>1 plateau de jeu de 9x9 cases</li>
+               <li>16 pions (8 pour chaque joueur : 7 classiques et 1 spécial)</li>
+               <li>Un deck de cartes d’action</li>
+               <li>Jetons de blocage (pour certaines cartes)</li>
+         </ul>
+         
+         <h2>4. Mise en place</h2>
+         <ul>
+               <li>Chaque joueur place ses 7 pions classiques et son pion spécial sur sa rangée de départ.</li>
+               <li>Chaque joueur pioche 3 cartes de départ.</li>
+               <li>Chaque joueur reçoit 2 cartes "Portes" choisies aléatoirement et les place sur le plateau avant de commencer la partie.</li>
+         </ul>
+         
+         <h2>5. Déroulement d’un Tour</h2>
+         <ul>
+               <li>Jouer une carte (optionnel).</li>
+               <li>Déplacement d’une case dans n’importe quelle direction.</li>
+               <li>Attaque si une carte "Attaque" a été jouée.</li>
+               <li>Piocher une nouvelle carte pour compléter sa main à 3 cartes maximum.</li>
+         </ul>
+         <p><strong>💡 Exception :</strong> La carte de Protection peut être jouée pendant le tour de l’adversaire.</p>
+         
+         <h2>6. Le Pion Spécial</h2>
+         <p>Ce pion peut attaquer sans utiliser de carte "Attaque" si un pion adverse est adjacent après son déplacement. Si le pion spécial est capturé, la partie est immédiatement remportée par l’adversaire.</p>
+         
+         <h2>7. Effet des Portes</h2>
+         <ul>
+               <li><strong>Porte de Saut</strong> : Permet de se déplacer de 2 cases.</li>
+               <li><strong>Porte de Défense</strong> : Protège temporairement le pion contre une attaque.</li>
+               <li><strong>Porte de Piège</strong> : Force un pion adverse à reculer de deux cases.</li>
+         </ul>
+         
+         <h2>8. Cartes d’Action</h2>
+         <ul>
+               <li><strong>Déplacement Double</strong> : Déplace un pion de deux cases.</li>
+               <li><strong>Téléportation</strong> : Déplace un pion sur n’importe quelle case sauf celles trop proches du centre.</li>
+               <li><strong>Attaque</strong> : Permet de capturer un pion adjacent.</li>
+               <li><strong>Blocage</strong> : Bloque une case définitivement (sauf la case centrale).</li>
+               <li><strong>Protection</strong> : Empêche une capture.</li>
+         </ul>
+         
+         <h2>9. Fin de Partie</h2>
+         <p>La partie prend fin immédiatement lorsqu’un joueur atteint l’un des trois objectifs communs. Il est déclaré vainqueur.</p>
+         
+         <h2>Stratégie et Conseils</h2>
+         <ul>
+               <li>Gérez vos cartes intelligemment.</li>
+               <li>Placez vos portes judicieusement.</li>
+               <li>Équilibrez attaque et défense.</li>
+               <li>Utilisez le pion spécial avec prudence.</li>
+         </ul>
+         
+         <div class="footer">
+               <p><strong>Amusez-vous bien avec Clash of Moves ! 🎲🔥</strong></p>
+               <button style="position: sticky; top: 0; opacity: 0.5;" onclick="back()">Retour</button>
+         </div>
+      </div>
+   `);
+   $('.main-container').attr("style","opacity: 0.1;");
+}
+
+function back() {
+   $('body').find('.container').remove();
+   $('.main-container').attr('style','');
+}

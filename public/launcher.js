@@ -39,7 +39,7 @@ function startHost() {
         }
         else  if (data.type === 'sessionClosed') {
             socket.close();
-            addMessage(`${data.username} à quitter la session.`, 'system');
+            addMessage(`l'invité à quitter la session.`, 'system');
             displayLauncher();
         }
     };
