@@ -39,7 +39,7 @@ function startHost() {
         }
         else  if (data.type === 'sessionClosed') {
             socket.close();
-            addMessage(`l'invité à quitter la session.`, 'system');
+            addMessage(`l'invité à quitté la session.`, 'system');
             displayLauncher();
         }
     };
@@ -83,7 +83,7 @@ function joinSession() {
         }
         else  if (data.type === 'sessionClosed') {
             socket.close();
-            addMessage("l'hôte à quitter la session.", 'host');
+            addMessage("l'hôte à quitté la session.", 'host');
             displayLauncher();
         }
     };
@@ -131,7 +131,6 @@ function addMessage(text, role, username) {
         chat.scrollTop(chat[0].scrollHeight);
     }
 }
-
 
 function displayChatBox() {
     $('#landing-page').addClass('cache');

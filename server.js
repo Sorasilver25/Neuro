@@ -18,7 +18,7 @@ wss.on('connection', (ws) => {
     console.log('Un client est connecté');
 
     let userRole = '';
-    // let currentSessionCode = '';
+    let currentSessionCode = '';
     let username = '';
 
     ws.isAlive = true;
