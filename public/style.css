@@ -5,6 +5,10 @@
     font-family: Arial, sans-serif;
 }
 
+:root {
+    --button-color: #007bff;
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: linear-gradient(135deg, #f0f4f8, #eff2f6);
@@ -49,7 +53,7 @@ p {
 }
 
 button {
-    background-color: #007bff;
+    background-color: var(--button-color);
     color: white;
     border: none;
     border-radius: 5px;
@@ -147,7 +151,7 @@ button:hover {
 }
 
 #message:focus, #username:focus {
-    border-color: #007bff;
+    border-color: var(--button-color);
 }
 
 button:disabled {
@@ -330,6 +334,11 @@ button:disabled {
     mask-repeat: no-repeat;
     -webkit-mask-size: 100% 100%;
     mask-size: 100% 100%;
+}
+
+.si--copy-line:active,
+.si--copy-line:focus {
+    transform: scale(0.92);
 }
 
 .si--copy-line:hover {
